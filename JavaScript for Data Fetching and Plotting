@@ -1,0 +1,71 @@
+// script.js
+
+// Function to fetch local temperature (mock data)
+async function getLocalTemperature() {
+    // Fetch from an actual API in production, here we mock it for example purposes
+    return Array.from({ length: 24 }, () => Math.random() * 10 + 20);  // Random data for 24 hours
+}
+
+// Function to fetch phone battery temperature (mock data)
+async function getBatteryTemperature() {
+    // Mocking battery temperature; would use actual data on a mobile device
+    return Array.from({ length: 24 }, () => Math.random() * 5 + 25);  // Random data for 24 hours
+}
+
+// Function to initialize and render the chart
+async function renderTemperatureChart() {
+    const localTemp = await getLocalTemperature();
+    const batteryTemp = await getBatteryTemperature();
+    const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
+
+    const ctx = document.getElementById('temperatureChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: hours,
+            datasets: [
+                {
+                    label: 'Local Temperature (°C)',
+                    data: localTemp,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: false,
+                },
+                {
+                    label: 'Battery Temperature (°C)',
+                    data: batteryTemp,
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    fill: false,
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Time of Day'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Temperature (°C)'
+                    },
+                    min: 15,
+                    max: 40,
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Local vs Battery Temperature'
+                }
+            }
+        }
+    });
+}
+
+renderTemperatureChart();
